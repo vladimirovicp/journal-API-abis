@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function generate_abis_menu() {
+  $items['api/generate-abis/journal-number'] = array(
+    'page callback' => 'generate_abis_journal_number_callback',
+    'access callback' => TRUE, // Открытый доступ
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'drupal_json_output', // Автоматически конвертирует массив в JSON
+  );
+  return $items;
+}
+
+/**
+ * Returns the first scalar value of a node field.
+ */
+function generate_abis_get_field_value($node, $field_name, $langcode = NULL) {
+  $items = field_get_items('node', $node, $field_name, $langcode);
+
+  if (empty($items[0])) {
+    return '';
+  }
+
+  $item = $items[0];
+  foreach (array('safe_value', 'value', 'target_id', 'tid', 'nid') as $key) {
+    if (isset($item[$key])) {
+      return $item[$key];
+    }
+  }
+
+  return '';
+}
+
+/**
+ * Callback функция для API.
+ */
+function generate_abis_journal_number_callback() {
+  // Отключаем кэш страницы drupal, чтобы ответ всегда был актуальным
+  drupal_page_is_cacheable(FALSE);
+//   drupal_add_http_header('Content-Type', 'application/json');
+  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
+
+  $data = array();
+
+  // 1. Делаем запрос к базе, чтобы получить ID (nid) всех нод типа journal_number
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'journal_number')
+        ->propertyCondition('status', NODE_PUBLISHED); // Берем только опубликованные. Если нужны все - уберите эту строку.
+
+  $result = $query->execute();
+
+  // 2. Если ноды найдены, загружаем их
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    // Загружаем сразу все ноды списком (оптимизация)
+    $nodes = node_load_multiple($nids);
+
+    foreach ($nodes as $node) {
+      // 3. Получаем значение поля title_field
+      // Используем field_get_items для безопасного получения значения (учитывает язык и т.д.)
+      $title_items = field_get_items('node', $node, 'title_field');
+      
+      $title_value = '';
+      if ($title_items) {
+        // Берем 'safe_value', чтобы текст прошел проверки безопасности, 
+        // или 'value' если нужно сырое значение.
+        $title_value = $title_items[0]['safe_value']; 
+      }
+
+      // Если поля title_field нет, но нужен стандартный title ноды (fallback):
+      if (empty($title_value)) {
+        $title_value = $node->title;
+      }
+
+      $title_en_value = generate_abis_get_field_value($node, 'title_field', 'en');
+
+      // Формируем элемент массива
+      $data[] = array(
+        'id' => $node->nid,
+        'title_field' => $title_value,
+        'title_field_en' => $title_en_value,
+        'field_year' => generate_abis_get_field_value($node, 'field_year'),
+        'field_volume' => generate_abis_get_field_value($node, 'field_volume'),
+        'field_number' => generate_abis_get_field_value($node, 'field_number'),
+        'field_part' => generate_abis_get_field_value($node, 'field_part'),
+      );
+    }
+  }
+
+  return $data;
+}

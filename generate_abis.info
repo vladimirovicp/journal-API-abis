@@ -1,0 +1,4 @@
+name = Generate ABIS API
+description = Модуль для вывода JSON.
+core = 7.x
+package = Custom
