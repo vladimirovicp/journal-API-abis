@@ -4,15 +4,17 @@
 ```json
 [
     {
-        "id": "4925",
-        "title_field": "Известия Саратовского университета. Новая серия. Серия «Математика. Механика. Информатика» 2007, Т. 7, вып. 1",
-        "title_field_en": "Izvestiya of Saratov University. New Series. Series: Mathematics. Mechanics. Informatics 2007, vol. 7, iss. 1",
-        "field_year": "2007",
-        "field_volume": "7",
-        "field_number": "1",
-        "field_part": "",
-        "field_journal_no_start": "1",
-        "field_journal_no_end": "94"
+        "id": "4923",
+        "title": {
+            "ru": "Известия Саратовского университета. Новая серия. Серия «Математика. Механика. Информатика» 2006, Т. 6, вып. 1",
+            "en": "Izvestiya of Saratov University. New Series. Series: Mathematics. Mechanics. Informatics 2006, vol. 6, iss. 1"
+        },
+        "year": "2006",
+        "volume": "6",
+        "number": "1",
+        "part": "",
+        "journal_no_start": "",
+        "journal_no_end": ""
     },
 
     ...
@@ -96,6 +98,8 @@ jn_journal_no_end = field_journal_no_end
 			</section>
 ```
 
+
+field_heading - Рубрика
 
 
 

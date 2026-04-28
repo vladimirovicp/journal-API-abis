@@ -164,8 +164,10 @@ function generate_abis_journal_number_callback() {
       // Формируем элемент массива
       $data[] = array(
         'id' => $node->nid,
-        'title' => $title_value,
-        'title_en' => $title_en_value,
+        'title' => array(
+          'ru' => $title_value,
+          'en' => $title_en_value,
+        ),
         'year' => substr(generate_abis_get_field_value($node, 'field_year'), 0, 4),
         'volume' => generate_abis_get_field_value($node, 'field_volume'),
         'number' => generate_abis_get_field_value($node, 'field_number'),
@@ -224,8 +226,10 @@ function generate_abis_journalarticle_id_callback($nid) {
   return array(
     'id' => (int) $node->nid,
     'language' => $node->language,
-    'title' => generate_abis_get_field_values($node, 'title_field'),
-    'title_en' => generate_abis_get_field_values($node, 'title_field', 'en'),
+    'title' => array(
+      'ru' => generate_abis_get_field_values($node, 'title_field'),
+      'en' => generate_abis_get_field_values($node, 'title_field', 'en'),
+    ),
     'language' => generate_abis_get_field_values($node, 'field_language'),
     'heading' => generate_abis_get_field_values($node, 'field_heading'),
     'typersci' => generate_abis_get_field_values($node, 'field_typersci'),
