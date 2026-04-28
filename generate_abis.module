@@ -17,6 +17,12 @@ function generate_abis_menu() {
     'type' => MENU_CALLBACK,
     'delivery callback' => 'generate_abis_json_output',
   );
+  $items['api/generate-abis/journal-data'] = array(
+    'page callback' => 'generate_abis_journal_data_callback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'generate_abis_json_output',
+  );
   return $items;
 }
 
@@ -171,6 +177,19 @@ function generate_abis_journal_number_callback() {
   }
 
   return $data;
+}
+
+/**
+ * Callback for journal data (titleid, issn).
+ */
+function generate_abis_journal_data_callback() {
+  drupal_page_is_cacheable(FALSE);
+
+  return array(
+    'titleid' => variable_get('elibrary_titleid', ''),
+    'issnPrint' => variable_get('issnPrint_citation', ''),
+    'issnOnline' => variable_get('issnOnline_citation', ''),
+  );
 }
 
 /**
