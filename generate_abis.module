@@ -160,10 +160,12 @@ function generate_abis_journal_number_callback() {
         'id' => $node->nid,
         'title_field' => $title_value,
         'title_field_en' => $title_en_value,
-        'field_year' => generate_abis_get_field_value($node, 'field_year'),
+        'field_year' => substr(generate_abis_get_field_value($node, 'field_year'), 0, 4),
         'field_volume' => generate_abis_get_field_value($node, 'field_volume'),
         'field_number' => generate_abis_get_field_value($node, 'field_number'),
         'field_part' => generate_abis_get_field_value($node, 'field_part'),
+        'field_journal_no_start' => generate_abis_get_field_value($node, 'field_journal_no_start'),
+        'field_journal_no_end' => generate_abis_get_field_value($node, 'field_journal_no_end'),
       );
     }
   }
