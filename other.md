@@ -1,7 +1,7 @@
 
 ## Get https://mmi.ddev.site/api/generate-abis/journal-number
 
-```
+```json
 [
     {
         "id": "4925",
@@ -30,6 +30,16 @@ if field_number пустое, то выводится сообщение: "Вы�
 if field_journal_no_start пустое, то выводится сообщение: "Выбранный журнал не содержит данных о первой странице"
 if field_journal_no_end пустое, то выводится сообщение: "Выбранный журнал не содержит данных о последней странице"
 
+
+## Get https://mmi.ddev.site/api/generate-abis/journal-data
+
+```json
+{
+    "titleid": "11982",
+    "issnPrint": "1816-9791",
+    "issnOnline": "2541-9005"
+}
+```
 
 
 Формат XML на выходе.
