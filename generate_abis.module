@@ -8,9 +8,26 @@ function generate_abis_menu() {
     'page callback' => 'generate_abis_journal_number_callback',
     'access callback' => TRUE, // Открытый доступ
     'type' => MENU_CALLBACK,
-    'delivery callback' => 'drupal_json_output', // Автоматически конвертирует массив в JSON
+    'delivery callback' => 'generate_abis_json_output',
+  );
+  $items['api/generate-abis/journalarticle/%'] = array(
+    'page callback' => 'generate_abis_journalarticle_id_callback',
+    'page arguments' => array(3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'generate_abis_json_output',
   );
   return $items;
+}
+
+/**
+ * Custom JSON delivery callback with unescaped Unicode.
+ */
+function generate_abis_json_output($var = NULL) {
+  drupal_add_http_header('Content-Type', 'application/json; charset=utf-8');
+  if (isset($var)) {
+    echo json_encode($var, JSON_UNESCAPED_UNICODE);
+  }
 }
 
 /**
@@ -34,13 +51,74 @@ function generate_abis_get_field_value($node, $field_name, $langcode = NULL) {
 }
 
 /**
+ * Returns a normalized value for a node field.
+ */
+function generate_abis_get_field_values($node, $field_name, $langcode = NULL) {
+  $items = field_get_items('node', $node, $field_name, $langcode);
+
+  if (empty($items)) {
+    return '';
+  }
+
+  $values = array();
+  foreach ($items as $item) {
+    $values[] = generate_abis_normalize_field_item($item);
+  }
+
+  return count($values) == 1 ? reset($values) : $values;
+}
+
+/**
+ * Normalizes a field item for API output.
+ */
+function generate_abis_normalize_field_item($item) {
+  if (isset($item['fid'])) {
+    $file = file_load($item['fid']);
+
+    return array(
+      'fid' => (int) $item['fid'],
+      'filename' => !empty($file->filename) ? $file->filename : '',
+      'uri' => !empty($file->uri) ? $file->uri : '',
+      'url' => !empty($file->uri) ? file_create_url($file->uri) : '',
+      'description' => isset($item['description']) ? $item['description'] : '',
+      'display' => isset($item['display']) ? (int) $item['display'] : 1,
+    );
+  }
+
+  if (isset($item['target_id'])) {
+    return $item['target_id'];
+  }
+
+  if (isset($item['tid'])) {
+    return $item['tid'];
+  }
+
+  if (isset($item['nid'])) {
+    return $item['nid'];
+  }
+
+  if (isset($item['safe_value']) || isset($item['value'])) {
+    $value = isset($item['safe_value']) ? $item['safe_value'] : $item['value'];
+
+    if (isset($item['summary']) || isset($item['safe_summary'])) {
+      return array(
+        'value' => $value,
+        'summary' => isset($item['safe_summary']) ? $item['safe_summary'] : $item['summary'],
+      );
+    }
+
+    return $value;
+  }
+
+  return $item;
+}
+
+/**
  * Callback функция для API.
  */
 function generate_abis_journal_number_callback() {
   // Отключаем кэш страницы drupal, чтобы ответ всегда был актуальным
   drupal_page_is_cacheable(FALSE);
-//   drupal_add_http_header('Content-Type', 'application/json');
-  drupal_add_http_header('Content-Type', 'text/plain; charset=utf-8');
 
   $data = array();
 
@@ -91,4 +169,64 @@ function generate_abis_journal_number_callback() {
   }
 
   return $data;
+}
+
+/**
+ * Callback for a journalarticle node by id.
+ */
+function generate_abis_journalarticle_id_callback($nid) {
+  drupal_page_is_cacheable(FALSE);
+
+  $nid = (int) $nid;
+  if ($nid <= 0) {
+    drupal_add_http_header('Status', '400 Bad Request');
+    return array(
+      'error' => 'Invalid node id.',
+    );
+  }
+
+  $node = node_load($nid);
+  if (empty($node)) {
+    drupal_add_http_header('Status', '404 Not Found');
+    return array(
+      'error' => 'Node not found.',
+    );
+  }
+
+  if ($node->type != 'journalarticle') {
+    drupal_add_http_header('Status', '400 Bad Request');
+    return array(
+      'error' => 'Node is not journalarticle.',
+    );
+  }
+
+  return array(
+    'id' => (int) $node->nid,
+    'language' => $node->language,
+    'title_field' => generate_abis_get_field_values($node, 'title_field'),
+    'title_field_en' => generate_abis_get_field_values($node, 'title_field', 'en'),
+    'field_language' => generate_abis_get_field_values($node, 'field_language'),
+    'field_heading' => generate_abis_get_field_values($node, 'field_heading'),
+    'field_typersci' => generate_abis_get_field_values($node, 'field_typersci'),
+    'field_udk' => generate_abis_get_field_values($node, 'field_udk'),
+    'field_edn' => generate_abis_get_field_values($node, 'field_edn'),
+    'field_doi' => generate_abis_get_field_values($node, 'field_doi'),
+    'field_autor' => generate_abis_get_field_values($node, 'field_autor'),
+    'field_key_words' => generate_abis_get_field_values($node, 'field_key_words'),
+    'field_acknowledgments' => generate_abis_get_field_values($node, 'field_acknowledgments'),
+    'field_funding' => generate_abis_get_field_values($node, 'field_funding'),
+    'field_date_received' => generate_abis_get_field_values($node, 'field_date_received'),
+    'field_accepted' => generate_abis_get_field_values($node, 'field_accepted'),
+    'field_published' => generate_abis_get_field_values($node, 'field_published'),
+    'field_page_no' => generate_abis_get_field_values($node, 'field_page_no'),
+    'field_page_no_to' => generate_abis_get_field_values($node, 'field_page_no_to'),
+    'body' => generate_abis_get_field_values($node, 'body'),
+    'field_literature' => generate_abis_get_field_values($node, 'field_literature'),
+    'field_short_text_pdf' => generate_abis_get_field_values($node, 'field_short_text_pdf'),
+    'field_fulltext' => generate_abis_get_field_values($node, 'field_fulltext'),
+    'field_text_pdf' => generate_abis_get_field_values($node, 'field_text_pdf'),
+    'field_text_pdf_en' => generate_abis_get_field_values($node, 'field_text_pdf_en'),
+    'field_journal_link' => generate_abis_get_field_values($node, 'field_journal_link'),
+    'field_status' => generate_abis_get_field_values($node, 'field_status'),
+  );
 }
