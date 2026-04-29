@@ -357,9 +357,39 @@ function generate_abis_build_autor_data($node) {
       $field_orcid = $user->field_orcid['und'][0]['value'];
     }
 
-    $company = '';
+    $company_data = '';
+    $company_target_id = 0;
     if (isset($user->field_company_link['und'][0]['target_id'])) {
-      $company = $user->field_company_link['und'][0]['target_id'];
+      $company_target_id = $user->field_company_link['und'][0]['target_id'];
+      $company_node = node_load($company_target_id);
+      if (!empty($company_node)) {
+        $orgname_ru = '';
+        if (isset($company_node->title_field['ru'][0]['value'])) {
+          $orgname_ru = $company_node->title_field['ru'][0]['value'];
+        }
+        $orgname_en = '';
+        if (isset($company_node->title_field['en'][0]['value'])) {
+          $orgname_en = $company_node->title_field['en'][0]['value'];
+        }
+        $address_ru = '';
+        if (isset($company_node->field_address['ru'][0]['value'])) {
+          $address_ru = $company_node->field_address['ru'][0]['value'];
+        }
+        $address_en = '';
+        if (isset($company_node->field_address['en'][0]['value'])) {
+          $address_en = $company_node->field_address['en'][0]['value'];
+        }
+        $company_data = array(
+          'orgName' => array(
+            'ru' => $orgname_ru,
+            'en' => $orgname_en,
+          ),
+          'address' => array(
+            'ru' => $address_ru,
+            'en' => $address_en,
+          ),
+        );
+      }
     }
 
     $autors[] = array(
@@ -381,7 +411,10 @@ function generate_abis_build_autor_data($node) {
         'ru' => $name_ru . ' ' . $middle_name_ru,
         'en' => $name_en . ' ' . $middle_name_en,
       ),
-      'company' => $company,
+      'company' => array(
+        'target_id' => (int) $company_target_id,
+        'data' => $company_data,
+      ),
       'researcherid' => $field_researcherid,
       'spin' => $field_spin,
       'scopusid' => $field_scopusid,

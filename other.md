@@ -102,24 +102,24 @@ jn_journal_no_end = field_journal_no_end
                 <pages>{page_no}-{page_no_to}</pages>
                 <artType>{typersci.abbreviation}</artType>
                 <authors>
-                   <author num="001"> 
+                   <author num={num}> 
                         <authorCodes>
-                            <researcherid></researcherid>
-                            <spin>8732-2104</spin>
-                            <scopusid></scopusid>
-                            <orcid>0000-0003-3820-9523</orcid>
+                            <researcherid>{researcherid}</researcherid>
+                            <spin>{spin}</spin>
+                            <scopusid>{scopusid}</scopusid>
+                            <orcid>{orcid}</orcid>
                         </authorCodes>
                         <individInfo lang="RUS">
-                            <surname>Григорьев</surname>
-                            <initials>Алексей Александрович</initials>
-                            <orgName>Саратовский национальный исследовательский государственный университет имени Н. Г. Чернышевского</orgName>
-                            <address>Россия, г. Саратов, ул. Астраханская, 83</address>
+                            <surname>{autor.surname.ru}</surname>
+                            <initials>{autor.initials.ru}</initials>
+                            <orgName>{company.data.orgName.ru}</orgName>
+                            <address>{company.data.address.ru}</address>
                         </individInfo>
                         <individInfo lang="ENG">
-                            <surname>Grigoriev</surname>
-                            <initials>Alexey Alexandrovich</initials>
-                            <orgName>Saratov State University</orgName>
-                            <address>Astrahanskaya str., 83, Saratov, Russia</address>
+                            <surname>{autor.surname.en}</surname>
+                            <initials>{autor.initials.en}</initials>
+                            <orgName>{company.data.orgName.en}</orgName>
+                            <address>{company.data.address.en}</address>
                         </individInfo>
                     </author>
                 </authors>
@@ -127,82 +127,10 @@ jn_journal_no_end = field_journal_no_end
 ```
 
 
-generate_abis_journalarticle_id_callback($nid)  при выводе autor": [
-        "3477",
-        "3476"
-    ], это  3477 и 3476 - это uid user 
 
 Пример получения полей пользователя user_load($autor_target_id)
 
 
-результат
-
-"autor": [
-    {
-        uid: uid
-        num: ' id трехзначний начиная с 001, генерируется он количества пришедших авторов, каждый на 1 больше, например второй автор будет иметь 002'
-        surname: field_lastname
-        name: field_name2
-        middle_name: field_middle_name
-        initials: field_name2 + ' ' + field_middle_name
-        company: 'tid таксономии'
-
-        researcherid: field_researcherid  // текст
-        spin: field_spin_elibrary // текст
-        scopusid: field_scopusid // Текстовое поле
-        orcid: 	field_orcid // Текстовое поле
-
-
-        },
-    {
-        uid: uid,
-        num: '002'
-                surname: field_lastname
-        name: field_name2
-        middle_name: field_middle_name
-        initials: field_name2 + ' ' + field_middle_name
-        company: 'tid таксономии'
-
-        researcherid: field_researcherid  // текст
-        spin: field_spin_elibrary // текст
-        scopusid: field_scopusid // Текстовое поле
-        orcid: 	field_orcid // Текстовое поле
-        },
-    ...
-]
-
-
-        orgName: 
-        address: 
-
-
-
-нужно исправить generate_abis_journalarticle_id_callback($nid)
-
-"autor": [{
-
-    следующее
-
-        surname: {
-            ru: 'фамилия на русском',
-            en: 'фамилия на английском',
-        }
-
-        name: {
-            ru: 'имя на русском',
-            en: 'имя на английском',
-        }
-        middle_name: {
-            ru: 'отчество на русском',
-            en: 'отчество на английском',
-        }
-
-        initials: {
-            ru: 'имя отчество на русском',
-            en: 'имя отчество на английском',
-        }
-
-}
 
 
 
