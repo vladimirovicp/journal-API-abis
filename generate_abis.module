@@ -271,7 +271,7 @@ function generate_abis_journalarticle_id_callback($nid) {
     'udk' => generate_abis_get_field_values($node, 'field_udk'),
     'edn' => generate_abis_get_field_values($node, 'field_edn'),
     'doi' => generate_abis_get_field_values($node, 'field_doi'),
-    'autor' => generate_abis_get_field_values($node, 'field_autor'),
+    'autor' => generate_abis_build_autor_data($node),
     'key_words' => generate_abis_get_field_values($node, 'field_key_words'),
     'acknowledgments' => generate_abis_get_field_values($node, 'field_acknowledgments'),
     'funding' => generate_abis_get_field_values($node, 'field_funding'),
@@ -289,4 +289,107 @@ function generate_abis_journalarticle_id_callback($nid) {
     'journal_link' => generate_abis_get_field_values($node, 'field_journal_link'),
     'status' => generate_abis_get_field_values($node, 'field_status'),
   );
+}
+
+function generate_abis_build_autor_data($node) {
+  $autor_items = field_get_items('node', $node, 'field_autor');
+  if (empty($autor_items)) {
+    return array();
+  }
+
+  $autors = array();
+  $num = 1;
+  foreach ($autor_items as $item) {
+    $uid = isset($item['uid']) ? $item['uid'] : (isset($item['target_id']) ? $item['target_id'] : 0);
+    if (empty($uid)) {
+      continue;
+    }
+
+    $user = user_load($uid);
+    if (empty($user)) {
+      continue;
+    }
+
+    $surname_ru = '';
+    if (isset($user->field_lastname['ru'][0]['value'])) {
+      $surname_ru = $user->field_lastname['ru'][0]['value'];
+    }
+    $surname_en = '';
+    if (isset($user->field_lastname['en'][0]['value'])) {
+      $surname_en = $user->field_lastname['en'][0]['value'];
+    }
+
+    $name_ru = '';
+    if (isset($user->field_name2['ru'][0]['value'])) {
+      $name_ru = $user->field_name2['ru'][0]['value'];
+    }
+    $name_en = '';
+    if (isset($user->field_name2['en'][0]['value'])) {
+      $name_en = $user->field_name2['en'][0]['value'];
+    }
+
+    $middle_name_ru = '';
+    if (isset($user->field_middle_name['ru'][0]['value'])) {
+      $middle_name_ru = $user->field_middle_name['ru'][0]['value'];
+    }
+    $middle_name_en = '';
+    if (isset($user->field_middle_name['en'][0]['value'])) {
+      $middle_name_en = $user->field_middle_name['en'][0]['value'];
+    }
+
+    $field_researcherid = '';
+    if (isset($user->field_researcherid['und'][0]['value'])) {
+      $field_researcherid = $user->field_researcherid['und'][0]['value'];
+    }
+
+    $field_spin = '';
+    if (isset($user->field_spin_elibrary['und'][0]['value'])) {
+      $field_spin = $user->field_spin_elibrary['und'][0]['value'];
+    }
+
+    $field_scopusid = '';
+    if (isset($user->field_scopusid['und'][0]['value'])) {
+      $field_scopusid = $user->field_scopusid['und'][0]['value'];
+    }
+
+    $field_orcid = '';
+    if (isset($user->field_orcid['und'][0]['value'])) {
+      $field_orcid = $user->field_orcid['und'][0]['value'];
+    }
+
+    $company = '';
+    if (isset($user->field_company_link['und'][0]['target_id'])) {
+      $company = $user->field_company_link['und'][0]['target_id'];
+    }
+
+    $autors[] = array(
+      'uid' => (int) $uid,
+      'num' => str_pad($num, 3, '0', STR_PAD_LEFT),
+      'surname' => array(
+        'ru' => $surname_ru,
+        'en' => $surname_en,
+      ),
+      'name' => array(
+        'ru' => $name_ru,
+        'en' => $name_en,
+      ),
+      'middle_name' => array(
+        'ru' => $middle_name_ru,
+        'en' => $middle_name_en,
+      ),
+      'initials' => array(
+        'ru' => $name_ru . ' ' . $middle_name_ru,
+        'en' => $name_en . ' ' . $middle_name_en,
+      ),
+      'company' => $company,
+      'researcherid' => $field_researcherid,
+      'spin' => $field_spin,
+      'scopusid' => $field_scopusid,
+      'orcid' => $field_orcid,
+    );
+
+    $num++;
+  }
+
+  return $autors;
 }

@@ -127,7 +127,83 @@ jn_journal_no_end = field_journal_no_end
 ```
 
 
-field_heading - Рубрика
+generate_abis_journalarticle_id_callback($nid)  при выводе autor": [
+        "3477",
+        "3476"
+    ], это  3477 и 3476 - это uid user 
+
+Пример получения полей пользователя user_load($autor_target_id)
+
+
+результат
+
+"autor": [
+    {
+        uid: uid
+        num: ' id трехзначний начиная с 001, генерируется он количества пришедших авторов, каждый на 1 больше, например второй автор будет иметь 002'
+        surname: field_lastname
+        name: field_name2
+        middle_name: field_middle_name
+        initials: field_name2 + ' ' + field_middle_name
+        company: 'tid таксономии'
+
+        researcherid: field_researcherid  // текст
+        spin: field_spin_elibrary // текст
+        scopusid: field_scopusid // Текстовое поле
+        orcid: 	field_orcid // Текстовое поле
+
+
+        },
+    {
+        uid: uid,
+        num: '002'
+                surname: field_lastname
+        name: field_name2
+        middle_name: field_middle_name
+        initials: field_name2 + ' ' + field_middle_name
+        company: 'tid таксономии'
+
+        researcherid: field_researcherid  // текст
+        spin: field_spin_elibrary // текст
+        scopusid: field_scopusid // Текстовое поле
+        orcid: 	field_orcid // Текстовое поле
+        },
+    ...
+]
+
+
+        orgName: 
+        address: 
+
+
+
+нужно исправить generate_abis_journalarticle_id_callback($nid)
+
+"autor": [{
+
+    следующее
+
+        surname: {
+            ru: 'фамилия на русском',
+            en: 'фамилия на английском',
+        }
+
+        name: {
+            ru: 'имя на русском',
+            en: 'имя на английском',
+        }
+        middle_name: {
+            ru: 'отчество на русском',
+            en: 'отчество на английском',
+        }
+
+        initials: {
+            ru: 'имя отчество на русском',
+            en: 'имя отчество на английском',
+        }
+
+}
+
 
 
 
