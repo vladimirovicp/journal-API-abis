@@ -223,6 +223,41 @@ function generate_abis_journalarticle_id_callback($nid) {
     );
   }
 
+  $heading_tid = generate_abis_get_field_values($node, 'field_heading');
+  $heading_data = '';
+  if (!empty($heading_tid)) {
+    $heading_term = taxonomy_term_load($heading_tid);
+    $heading_ru = !empty($heading_term) ? $heading_term->name : '';
+    $heading_i18n = i18n_get_object('taxonomy_term', $heading_tid);
+    $heading_en_term = $heading_i18n->localize('en');
+    $heading_en = !empty($heading_en_term) ? $heading_en_term->name : '';
+    $heading_data = array(
+      'tid' => (int) $heading_tid,
+      'ru' => $heading_ru,
+      'en' => $heading_en,
+    );
+  }
+
+  $typersci_tid = generate_abis_get_field_values($node, 'field_typersci');
+  $typersci_data = '';
+  if (!empty($typersci_tid)) {
+    $typersci_term = taxonomy_term_load($typersci_tid);
+    $typersci_ru = !empty($typersci_term) ? $typersci_term->name : '';
+    $typersci_i18n = i18n_get_object('taxonomy_term', $typersci_tid);
+    $typersci_en_term = $typersci_i18n->localize('en');
+    $typersci_en = !empty($typersci_en_term) ? $typersci_en_term->name : '';
+    $typersci_abbreviation = '';
+    if (!empty($typersci_term) && isset($typersci_term->field_abbreviation['und'][0]['value'])) {
+      $typersci_abbreviation = $typersci_term->field_abbreviation['und'][0]['value'];
+    }
+    $typersci_data = array(
+      'tid' => (int) $typersci_tid,
+      'ru' => $typersci_ru,
+      'en' => $typersci_en,
+      'abbreviation' => $typersci_abbreviation,
+    );
+  }
+
   return array(
     'id' => (int) $node->nid,
     'language' => $node->language,
@@ -231,8 +266,8 @@ function generate_abis_journalarticle_id_callback($nid) {
       'en' => generate_abis_get_field_values($node, 'title_field', 'en'),
     ),
     'language' => generate_abis_get_field_values($node, 'field_language'),
-    'heading' => generate_abis_get_field_values($node, 'field_heading'),
-    'typersci' => generate_abis_get_field_values($node, 'field_typersci'),
+    'heading' => $heading_data,
+    'typersci' => $typersci_data,
     'udk' => generate_abis_get_field_values($node, 'field_udk'),
     'edn' => generate_abis_get_field_values($node, 'field_edn'),
     'doi' => generate_abis_get_field_values($node, 'field_doi'),

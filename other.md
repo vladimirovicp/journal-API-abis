@@ -91,11 +91,39 @@ jn_journal_no_end = field_journal_no_end
 далее берутся данные из статьи
 
 ```xml
+
         <articles>
             <section>
-				<secTitle lang="RUS"> $secTitleRu </secTitle>
-				<secTitle lang="ENG"> $secTitleEn </secTitle>
+				<secTitle lang="RUS"> heading.ru </secTitle>
+				<secTitle lang="ENG"> heading.en </secTitle>
 			</section>
+
+            <article>
+                <pages>{page_no}-{page_no_to}</pages>
+                <artType>{typersci.abbreviation}</artType>
+                <authors>
+                   <author num="001"> 
+                        <authorCodes>
+                            <researcherid></researcherid>
+                            <spin>8732-2104</spin>
+                            <scopusid></scopusid>
+                            <orcid>0000-0003-3820-9523</orcid>
+                        </authorCodes>
+                        <individInfo lang="RUS">
+                            <surname>Григорьев</surname>
+                            <initials>Алексей Александрович</initials>
+                            <orgName>Саратовский национальный исследовательский государственный университет имени Н. Г. Чернышевского</orgName>
+                            <address>Россия, г. Саратов, ул. Астраханская, 83</address>
+                        </individInfo>
+                        <individInfo lang="ENG">
+                            <surname>Grigoriev</surname>
+                            <initials>Alexey Alexandrovich</initials>
+                            <orgName>Saratov State University</orgName>
+                            <address>Astrahanskaya str., 83, Saratov, Russia</address>
+                        </individInfo>
+                    </author>
+                </authors>
+
 ```
 
 
