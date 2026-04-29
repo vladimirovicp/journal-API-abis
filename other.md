@@ -123,8 +123,58 @@ jn_journal_no_end = field_journal_no_end
                         </individInfo>
                     </author>
                 </authors>
+                <artTitles>
+                    <artTitle lang="RUS">{ title.ru }</artTitle>
+                    <artTitle lang="ENG">{ title.en}</artTitle>
+                </artTitles>
+
+                <abstracts>
+                    <abstract lang="RUS">{ body.ru }</abstract>
+                    <abstract lang="ENG"> { body.en }</abstracts>
+                    <text lang="ANY"> { fulltext }</text>
+                    <codes>
+                        <udk> {udk}</udk>
+                        <doi>{doi}</doi>
+                        <edn> {edn}</edn>
+                    </codes>
+
+                    <keywords>
+                        <kwdGroup lang="RUS">
+                            <keyword>сложные сети</keyword>
+                            <keyword>ранг дружбы</keyword>
+                            <keyword>конфигурационная модель</keyword>
+                            <keyword>парадокс дружбы</keyword>
+                            <keyword>степенное распределение</keyword>
+                            <keyword>предельные теоремы</keyword>
+                            <keyword>корреляции степеней</keyword>
+                        </kwdGroup>
+                        <kwdGroup lang="ENG">
+                            <keyword>complex networks</keyword>
+                            <keyword>friendship rank</keyword>
+                            <keyword>configuration model</keyword>
+                            <keyword>friendship paradox</keyword>
+                            <keyword>power-law distribution</keyword>
+                            <keyword>limit theorems</keyword>
+                            <keyword>degree correlations</keyword>
+                        </kwdGroup>
+                    </keywords>
 
 ```
+
+generate_abis_journalarticle_id_callback($nid)
+
+    "body": {
+        "value": "<div class=\"tex2jax\"><p class=\"rtejustify\">Одно из свойств периодической функции на вещественной оси состоит в том, что она полностью определяется своими значениями на периоде. Этот факт допускает следующее нетривиальное обобщение на многомерный случай: если функция $f\\in C^\\infty (\\mathbb R^n)$ $(n\\ge 2)$ с нулевыми интегралами по всем сферам (или шарам) фиксированного радиуса $r$ равна нулю в некотором шаре радиуса $r$, то $f$ является нулевой на $\\mathbb R^n$. Условие бесконечной гладкости функции $f$ в этом утверждении ослабить нельзя. В данной работе изучается подобное явление для решений уравнений свертки, связанных с оператором обобщенного сдвига Бесселя. Сначала рассматривается случай, когда свертывателем уравнения является индикатор отрезка, симметричного относительно нуля. Показано, что решения такого уравнения определяется своими значениями на указанном отрезке. Далее приводится обобщение этого свойства для общего уравнения свертки Бесселя. Полученные результаты являются аналогами известных теорем единственности для периодических в среднем функций, принадлежащих Ф. Йону, Ю. И. Любичу и А. Ф. Леонтьеву.</p>\n</div>",
+        "summary": "<div class=\"tex2jax\"></div>"
+    },
+
+    нужно переделать
+    "body": {
+        ru: данные не должны содержать теги html,
+        en: данные не должны содержать теги html,
+    }
+
+    body.ru = должно происходить форматирование html тегов, они должны удаляться
 
 
 

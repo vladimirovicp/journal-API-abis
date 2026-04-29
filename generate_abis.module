@@ -280,7 +280,7 @@ function generate_abis_journalarticle_id_callback($nid) {
     'published' => generate_abis_get_field_values($node, 'field_published'),
     'page_no' => generate_abis_get_field_values($node, 'field_page_no'),
     'page_no_to' => generate_abis_get_field_values($node, 'field_page_no_to'),
-    'body' => generate_abis_get_field_values($node, 'body'),
+    'body' => generate_abis_get_body_data($node),
     'literature' => generate_abis_get_field_values($node, 'field_literature'),
     'short_text_pdf' => generate_abis_get_field_values($node, 'field_short_text_pdf'),
     'fulltext' => generate_abis_get_field_values($node, 'field_fulltext'),
@@ -425,4 +425,23 @@ function generate_abis_build_autor_data($node) {
   }
 
   return $autors;
+}
+
+function generate_abis_get_body_data($node) {
+  $body_ru = '';
+  $body_items_ru = field_get_items('node', $node, 'body', 'ru');
+  if (!empty($body_items_ru[0]['value'])) {
+    $body_ru = strip_tags($body_items_ru[0]['value']);
+  }
+
+  $body_en = '';
+  $body_items_en = field_get_items('node', $node, 'body', 'en');
+  if (!empty($body_items_en[0]['value'])) {
+    $body_en = strip_tags($body_items_en[0]['value']);
+  }
+
+  return array(
+    'ru' => $body_ru,
+    'en' => $body_en,
+  );
 }
