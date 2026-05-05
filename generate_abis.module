@@ -288,7 +288,7 @@ function generate_abis_journalarticle_id_callback($nid) {
     'page_no' => generate_abis_get_field_values($node, 'field_page_no'),
     'page_no_to' => generate_abis_get_field_values($node, 'field_page_no_to'),
     'body' => generate_abis_get_body_data($node),
-    'literature' => generate_abis_get_field_values($node, 'field_literature'),
+    'literature' => generate_abis_build_literature($node),
     'short_text_pdf' => generate_abis_get_field_values($node, 'field_short_text_pdf'),
     'fulltext' => generate_abis_get_field_values($node, 'field_fulltext'),
     'text_pdf' => generate_abis_get_field_values($node, 'field_text_pdf'),
@@ -509,4 +509,26 @@ function generate_abis_format_date($value) {
   }
   $timestamp = strtotime($value);
   return $timestamp ? date('d.m.Y', $timestamp) : '';
+}
+
+function generate_abis_build_literature($node) {
+  $items = field_get_items('node', $node, 'field_literature');
+  if (empty($items[0]['value'])) {
+    return NULL;
+  }
+
+  $html = $items[0]['value'];
+  if (!preg_match_all('/<li>(.*?)<\/li>/siu', $html, $matches)) {
+    return NULL;
+  }
+
+  $result = array();
+  foreach ($matches[1] as $li) {
+    $text = html_entity_decode($li, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = strip_tags($text);
+    $text = trim($text);
+    $result[] = array('text' => $text);
+  }
+
+  return $result;
 }

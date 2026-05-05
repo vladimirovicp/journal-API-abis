@@ -158,10 +158,13 @@ jn_journal_no_end = field_journal_no_end
 
                     <references>
                         <reference>
+                            for lit in literature
                             <refInfo lang="ANY">
-                                <text>Pal S., Yu F., Novick Y., Swami A., Bar-Noy A. A study on the friendship paradox — quantitative analysis and relationship with assortative mixing. Applied Network Science, 2019, vol. 4, art. 71. DOI: https://doi.org/10.1007/s41109-019-0190-8</text>
+                                <text>{lit.text}</text>
                             </refInfo>
                     </reference>
+
+                    
 ```
 
 generate_abis_journalarticle_id_callback($nid)
