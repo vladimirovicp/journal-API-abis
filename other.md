@@ -94,8 +94,8 @@ jn_journal_no_end = field_journal_no_end
 
         <articles>
             <section>
-				<secTitle lang="RUS"> heading.ru </secTitle>
-				<secTitle lang="ENG"> heading.en </secTitle>
+				<secTitle lang="RUS"> {heading.ru} </secTitle>
+				<secTitle lang="ENG"> {heading.en} </secTitle>
 			</section>
 
             <article>
@@ -164,7 +164,11 @@ jn_journal_no_end = field_journal_no_end
                             </refInfo>
                     </reference>
 
-                    
+                    <files>
+                        <file desc="fullText">{text_pdf.filename}</file>
+                    </files>
+
+
 ```
 
 generate_abis_journalarticle_id_callback($nid)
