@@ -272,7 +272,10 @@ function generate_abis_journalarticle_id_callback($nid) {
     'edn' => generate_abis_get_field_values($node, 'field_edn'),
     'doi' => generate_abis_get_field_values($node, 'field_doi'),
     'autor' => generate_abis_build_autor_data($node),
-    'key_words' => generate_abis_get_field_values($node, 'field_key_words'),
+
+    // 'key_words' => generate_abis_get_field_values($node, 'field_key_words'),
+    'key_words' => generate_abis_build_taxonomy_data($node, 'field_key_words'),
+
     'acknowledgments' => generate_abis_get_field_values($node, 'field_acknowledgments'),
     'funding' => generate_abis_get_field_values($node, 'field_funding'),
     'date_received' => generate_abis_get_field_values($node, 'field_date_received'),
@@ -444,4 +447,35 @@ function generate_abis_get_body_data($node) {
     'ru' => $body_ru,
     'en' => $body_en,
   );
+}
+
+
+function generate_abis_build_taxonomy_data($node, $field_name) {
+  $items = field_get_items('node', $node, $field_name);
+  if (empty($items)) {
+    return array();
+  }
+
+  $result = array();
+  foreach ($items as $item) {
+
+    $tid = isset($item['tid']) ? $item['tid'] : (isset($item['target_id']) ? $item['target_id'] : 0);
+    if (empty($tid)) {
+      continue;
+    }
+
+    $term = taxonomy_term_load($tid);
+    $ru = !empty($term) ? $term->name : '';
+    $i18n_object = i18n_get_object('taxonomy_term', $tid);
+    $en_term = $i18n_object->localize('en');
+    $en = !empty($en_term) ? $en_term->name : '';
+
+    $result[] = array(
+      'tid' => (int) $tid,
+      'ru' => $ru,
+      'en' => $en,
+    );
+  }
+
+  return $result;
 }
