@@ -451,31 +451,51 @@ function generate_abis_get_body_data($node) {
 
 
 function generate_abis_build_taxonomy_data($node, $field_name) {
-  $items = field_get_items('node', $node, $field_name);
-  if (empty($items)) {
-    return array();
-  }
+  $items_ru = field_get_items('node', $node, $field_name, 'ru');
+  $items_en = field_get_items('node', $node, $field_name, 'en');
 
-  $result = array();
-  foreach ($items as $item) {
-
-    $tid = isset($item['tid']) ? $item['tid'] : (isset($item['target_id']) ? $item['target_id'] : 0);
-    if (empty($tid)) {
-      continue;
+  $ru_page = array();
+  if (!empty($items_ru)) {
+    foreach ($items_ru as $item) {
+      $tid = isset($item['tid']) ? $item['tid'] : (isset($item['target_id']) ? $item['target_id'] : 0);
+      if (empty($tid)) {
+        continue;
+      }
+      $term = taxonomy_term_load($tid);
+      $ru = !empty($term) ? $term->name : '';
+      $i18n_object = i18n_get_object('taxonomy_term', $tid);
+      $en_term = $i18n_object->localize('en');
+      $en = !empty($en_term) ? $en_term->name : '';
+      $ru_page[] = array(
+        'tid' => (int) $tid,
+        'ru' => $ru,
+        'en' => $en,
+      );
     }
-
-    $term = taxonomy_term_load($tid);
-    $ru = !empty($term) ? $term->name : '';
-    $i18n_object = i18n_get_object('taxonomy_term', $tid);
-    $en_term = $i18n_object->localize('en');
-    $en = !empty($en_term) ? $en_term->name : '';
-
-    $result[] = array(
-      'tid' => (int) $tid,
-      'ru' => $ru,
-      'en' => $en,
-    );
   }
 
-  return $result;
+  $en_page = array();
+  if (!empty($items_en)) {
+    foreach ($items_en as $item) {
+      $tid = isset($item['tid']) ? $item['tid'] : (isset($item['target_id']) ? $item['target_id'] : 0);
+      if (empty($tid)) {
+        continue;
+      }
+      $term = taxonomy_term_load($tid);
+      $ru = !empty($term) ? $term->name : '';
+      $i18n_object = i18n_get_object('taxonomy_term', $tid);
+      $en_term = $i18n_object->localize('en');
+      $en = !empty($en_term) ? $en_term->name : '';
+      $en_page[] = array(
+        'tid' => (int) $tid,
+        'ru' => $ru,
+        'en' => $en,
+      );
+    }
+  }
+
+  return array(
+    'ru_page' => $ru_page,
+    'en_page' => $en_page,
+  );
 }
