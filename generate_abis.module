@@ -272,15 +272,19 @@ function generate_abis_journalarticle_id_callback($nid) {
     'edn' => generate_abis_get_field_values($node, 'field_edn'),
     'doi' => generate_abis_get_field_values($node, 'field_doi'),
     'autor' => generate_abis_build_autor_data($node),
-
-    // 'key_words' => generate_abis_get_field_values($node, 'field_key_words'),
     'key_words' => generate_abis_build_taxonomy_data($node, 'field_key_words'),
-
     'acknowledgments' => generate_abis_get_field_values($node, 'field_acknowledgments'),
     'funding' => generate_abis_get_field_values($node, 'field_funding'),
-    'date_received' => generate_abis_get_field_values($node, 'field_date_received'),
-    'accepted' => generate_abis_get_field_values($node, 'field_accepted'),
-    'published' => generate_abis_get_field_values($node, 'field_published'),
+
+    // 'date_received' => generate_abis_get_field_values($node, 'field_date_received'),
+    // 'accepted' => generate_abis_get_field_values($node, 'field_accepted'),
+    // 'published' => generate_abis_get_field_values($node, 'field_published'),
+
+    'date_received' => generate_abis_format_date(generate_abis_get_field_values($node, 'field_date_received')),
+    'accepted' => generate_abis_format_date(generate_abis_get_field_values($node, 'field_accepted')),
+    'published' => generate_abis_format_date(generate_abis_get_field_values($node, 'field_published')),
+
+
     'page_no' => generate_abis_get_field_values($node, 'field_page_no'),
     'page_no_to' => generate_abis_get_field_values($node, 'field_page_no_to'),
     'body' => generate_abis_get_body_data($node),
@@ -449,7 +453,6 @@ function generate_abis_get_body_data($node) {
   );
 }
 
-
 function generate_abis_build_taxonomy_data($node, $field_name) {
   $items_ru = field_get_items('node', $node, $field_name, 'ru');
   $items_en = field_get_items('node', $node, $field_name, 'en');
@@ -498,4 +501,12 @@ function generate_abis_build_taxonomy_data($node, $field_name) {
     'ru_page' => $ru_page,
     'en_page' => $en_page,
   );
+}
+
+function generate_abis_format_date($value) {
+  if (empty($value)) {
+    return '';
+  }
+  $timestamp = strtotime($value);
+  return $timestamp ? date('d.m.Y', $timestamp) : '';
 }

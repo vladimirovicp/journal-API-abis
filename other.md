@@ -140,25 +140,28 @@ jn_journal_no_end = field_journal_no_end
 
                     <keywords>
                         <kwdGroup lang="RUS">
-                            <keyword>сложные сети</keyword>
-                            <keyword>ранг дружбы</keyword>
-                            <keyword>конфигурационная модель</keyword>
-                            <keyword>парадокс дружбы</keyword>
-                            <keyword>степенное распределение</keyword>
-                            <keyword>предельные теоремы</keyword>
-                            <keyword>корреляции степеней</keyword>
+                            for key_word in key_words.ru_page
+                            <keyword>{key_word.ru}</keyword>
                         </kwdGroup>
                         <kwdGroup lang="ENG">
-                            <keyword>complex networks</keyword>
-                            <keyword>friendship rank</keyword>
-                            <keyword>configuration model</keyword>
-                            <keyword>friendship paradox</keyword>
-                            <keyword>power-law distribution</keyword>
-                            <keyword>limit theorems</keyword>
-                            <keyword>degree correlations</keyword>
+                            for key_word in key_words.en_page
+                            <keyword>{key_word.en}</keyword>
                         </kwdGroup>
                     </keywords>
 
+                    <dates>
+                        <dateReceived>{date_received}</dateReceived>
+                        <dateAccepted>{accepted}</dateAccepted>
+                        <datePublication>{published}</datePublication>
+                    </dates>
+
+
+                    <references>
+                        <reference>
+                            <refInfo lang="ANY">
+                                <text>Pal S., Yu F., Novick Y., Swami A., Bar-Noy A. A study on the friendship paradox — quantitative analysis and relationship with assortative mixing. Applied Network Science, 2019, vol. 4, art. 71. DOI: https://doi.org/10.1007/s41109-019-0190-8</text>
+                            </refInfo>
+                    </reference>
 ```
 
 generate_abis_journalarticle_id_callback($nid)
