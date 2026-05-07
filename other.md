@@ -194,6 +194,39 @@ generate_abis_journalarticle_id_callback($nid)
 
 
 
+----
+
+
+Добавь новый items $items['api/generate-abis/journal-list/%']
+
+который будет по полученому значению id node просматривать все ноды типа материала journalarticle и сравнивать содержит ли поле 
+field_journal_link Entity Reference такой же id как мы указали.
+
+в результате должен получиться вывод статей относящихся к журналу
+
+[
+    {
+        "id": 7253,
+        "title": {
+            "ru": "Теорема единственности для периодических в среднем функций на гипергруппе Бесселя – Кингмана",
+            "en": "A uniqueness theorem for mean periodic functions on the Bessel – Kingmann hypergroup"
+        },
+    },
+    {
+        "id": 7254,
+        "title": {
+            "ru": "Теорема единственности для периодических в среднем функций на гипергруппе Бесселя – Кингмана2",
+            "en": "A uniqueness theorem for mean periodic functions on the Bessel – Kingmann hypergroup2"
+        },
+    },
+]
+
+
+
+
+---
+
+
 
 потом надо добавить
 ```php
@@ -202,3 +235,7 @@ function generate_abis_journal_number_callback() {
   drupal_page_is_cacheable(FALSE);
   drupal_add_http_header('Content-Type', 'application/json');  // эту строку!!!
 ```
+
+
+
+

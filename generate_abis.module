@@ -23,6 +23,13 @@ function generate_abis_menu() {
     'type' => MENU_CALLBACK,
     'delivery callback' => 'generate_abis_json_output',
   );
+  $items['api/generate-abis/journal-list/%'] = array(
+    'page callback' => 'generate_abis_journal_list_callback',
+    'page arguments' => array(3),
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+    'delivery callback' => 'generate_abis_json_output',
+  );
   return $items;
 }
 
@@ -192,6 +199,52 @@ function generate_abis_journal_data_callback() {
     'issnPrint' => variable_get('issnPrint_citation', ''),
     'issnOnline' => variable_get('issnOnline_citation', ''),
   );
+}
+
+/**
+ * Callback for journal list by journal_number id.
+ */
+function generate_abis_journal_list_callback($nid) {
+  drupal_page_is_cacheable(FALSE);
+
+  $nid = (int) $nid;
+  if ($nid <= 0) {
+    drupal_add_http_header('Status', '400 Bad Request');
+    return array('error' => 'Invalid node id.');
+  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'journalarticle')
+        ->propertyCondition('status', NODE_PUBLISHED)
+        ->fieldCondition('field_journal_link', 'target_id', $nid, '=');
+
+  $result = $query->execute();
+
+  $data = array();
+  if (isset($result['node'])) {
+    $nids = array_keys($result['node']);
+    $nodes = node_load_multiple($nids);
+
+    foreach ($nodes as $node) {
+      $title_ru = generate_abis_get_field_values($node, 'title_field', 'ru');
+      $title_en = generate_abis_get_field_values($node, 'title_field', 'en');
+
+      if (empty($title_ru)) {
+        $title_ru = $node->title;
+      }
+
+      $data[] = array(
+        'id' => (int) $node->nid,
+        'title' => array(
+          'ru' => $title_ru,
+          'en' => $title_en,
+        ),
+      );
+    }
+  }
+
+  return $data;
 }
 
 /**
