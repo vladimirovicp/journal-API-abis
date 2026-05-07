@@ -240,6 +240,7 @@ function generate_abis_journal_list_callback($nid) {
           'ru' => $title_ru,
           'en' => $title_en,
         ),
+        'page_no' => generate_abis_get_field_values($node, 'field_page_no'),
       );
     }
   }
