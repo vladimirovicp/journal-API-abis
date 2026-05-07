@@ -198,6 +198,10 @@ function generate_abis_journal_data_callback() {
     'titleid' => variable_get('elibrary_titleid', ''),
     'issnPrint' => variable_get('issnPrint_citation', ''),
     'issnOnline' => variable_get('issnOnline_citation', ''),
+    'elibraryTitle' => array(
+      'ru' => variable_get('elibrary_titleru', ''),
+      'en' => variable_get('elibrary_titleen', ''),
+    ),
   );
 }
 
