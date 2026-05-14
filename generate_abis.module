@@ -202,6 +202,10 @@ function generate_abis_journal_data_callback() {
       'ru' => variable_get('elibrary_titleru', ''),
       'en' => variable_get('elibrary_titleen', ''),
     ),
+    'abbrTitle' => variable_get('abbr_title', ''),
+    'publ' => variable_get('publ', ''),
+    'placePubl' => variable_get('placePubl', ''),
+    'address' => variable_get('address', ''),
   );
 }
 
