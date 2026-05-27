@@ -138,8 +138,8 @@ function generate_abis_journal_number_callback() {
   // 1. Делаем запрос к базе, чтобы получить ID (nid) всех нод типа journal_number
   $query = new EntityFieldQuery();
   $query->entityCondition('entity_type', 'node')
-        ->entityCondition('bundle', 'journal_number')
-        ->propertyCondition('status', NODE_PUBLISHED); // Берем только опубликованные. Если нужны все - уберите эту строку.
+        ->entityCondition('bundle', 'journal_number');
+        //->propertyCondition('status', NODE_PUBLISHED); // Берем только опубликованные. Если нужны все - уберите эту строку.
 
   $result = $query->execute();
 
