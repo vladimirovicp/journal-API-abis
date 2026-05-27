@@ -580,7 +580,7 @@ function generate_abis_build_literature($node) {
   }
 
   $html = $items[0]['value'];
-  if (!preg_match_all('/<li>(.*?)<\/li>/siu', $html, $matches)) {
+  if (!preg_match_all('/<li\b[^>]*>(.*?)<\/li>/siu', $html, $matches)) {
     return NULL;
   }
 
